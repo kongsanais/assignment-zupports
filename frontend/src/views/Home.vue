@@ -30,10 +30,10 @@
       </div>
 
       <div class="col-10">
-        <div class="card" style="width: 100%;height:500px;margin: 5px">
+        <div class="card" style="width: 100%;height:560px;margin: 5px">
           <h5 class="card-title text-center">Map</h5>
 
-          <GMapMap :center="centerLocation" :zoom="15" map-type-id="terrain" style="width: 80vw; height: 30">
+          <GMapMap :center="centerLocation" :zoom="15" map-type-id="terrain" style="width: 80vw; height: 50vh">
                 <GMapMarker
                 :key="markerDetails.id"
                 :position="markerDetails.position"
