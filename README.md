@@ -16,3 +16,9 @@ npm run dev
 
 ## Backend  Laravel  
 ### Install
+``` bash
+composer install 
+```
+```bash
+npm run dev 
+```php artisan serve 
