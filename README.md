@@ -7,8 +7,8 @@
 **NPM**
 
 ``` bash
-npm install vue-quill-editor --save
+npm install 
 ```
 ```bash
-yarn add vue-quill-editor
+npm run dev 
 ```
