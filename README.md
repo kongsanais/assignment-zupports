@@ -24,7 +24,7 @@ php artisan serve
 ```
 
 ## ENV setup 
-Fronted : .env file
+## Fronted : .env file
 ![image](https://github.com/kongsanais/assignment-zupports/assets/54577966/5d0471fd-3a2f-4f4c-a980-a1782c4d71ec)
 
 ## Backend : .env fle
