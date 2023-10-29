@@ -12,4 +12,4 @@ npm install
 ```bash
 npm run dev 
 ```
-![Uploading image.png…]()
+![image](https://github.com/kongsanais/assignment-zupports/assets/54577966/44354ab7-cf20-429a-8c00-a4b200db62f1)
