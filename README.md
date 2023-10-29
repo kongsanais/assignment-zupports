@@ -20,5 +20,5 @@ npm run dev
 composer install 
 ```
 ```bash
-npm run dev 
-```php artisan serve 
+php artisan serve 
+```
