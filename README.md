@@ -12,3 +12,4 @@ npm install
 ```bash
 npm run dev 
 ```
+![Uploading image.png…]()
