@@ -1,7 +1,14 @@
 <template>
-  <nav class="navbar bg-primary" data-bs-theme="dark">
+  <nav class="navbar" style="background-color: #0064CF;" data-bs-theme="dark">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">{{ navTextTitle }}</a>
+      <a class="navbar-brand" href="#">
+        <img
+          src="../../../public/map.png"
+          style="height: 30px; width: 30px"
+        />
+        <b style="margin:15px">{{ navTextTitle }}</b>
+        </a
+      >
       <button
         class="navbar-toggler"
         type="button"
