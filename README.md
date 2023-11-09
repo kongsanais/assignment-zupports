@@ -1,6 +1,10 @@
 # Assignment-zupports Laravel + Vuejs3 
 
-![image](https://github.com/kongsanais/assignment-zupports/assets/54577966/fcf0c870-82a0-458b-abcf-b4a59cb51803)
+![image](https://github.com/kongsanais/assignment-zupports/assets/54577966/cd6dd5d0-aa0e-4ee0-aee0-7e3494a85804)
+
+![image](https://github.com/kongsanais/assignment-zupports/assets/54577966/1ed3ffeb-7b8d-42c7-874b-970da345cd6a)
+
+![image](https://github.com/kongsanais/assignment-zupports/assets/54577966/74910cf7-1585-498f-b199-8c7214634108)
 
 
 ## Frontend Vuejs3 
