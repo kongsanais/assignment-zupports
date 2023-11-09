@@ -1,0 +1,20 @@
+1) Backend
+     - laravel 
+     - guzzle ----> google map api 
+   google map api 
+   -https://maps.googleapis.com/maps/api/place/textsearch/json?query=$textsearch&key=$apiKey
+   -https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=$lat,$lng&radius=2000&type=$type&key=$apiKey
+api 
+   - http://127.0.0.1:8000/api/v1/googleMapApi/placeSearch/BangSue
+   - http://127.0.0.1:8000/api/v1/googleMapApi/nearbySearch/13.828253/100.5284507/restaurant
+
+
+2) frontend
+   - vuejs + bootstrap + vue google maps
+   - axios 
+
+
+test
+-Bang Sue
+-Chatuchak
+-Phaya thai

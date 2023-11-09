@@ -1,6 +1,5 @@
 <template>
   <div class="row mx-auto">
-     <!-- update responsive  -->
     <div class="col-sm-12 col-md-12 col-lg-12 col-xl-3">
       <!-- Search Card -->
       <div class="card" style="width: 100%; margin-top: 5px">
@@ -75,7 +74,7 @@
         </div>
       </div>
     </div>
-     <!-- update responsive  -->
+
     <div class="col-sm-12 col-md-12 col-lg-12 col-xl-9">
       <!-- Map card to display google map  -->
       <div
@@ -142,8 +141,11 @@ export default {
       position: centerLocation.value,
     });
 
+
+
     const markerRestaurant = ref([]);
     const RestaurantList = ref([]);
+
 
 
     async function findLocation() {
@@ -152,69 +154,49 @@ export default {
       RestaurantList.value = [];
       markerRestaurant.value = [];
 
-      /* get cache data from localstorage */
-      let cacheHistory = localStorage.getItem("cache_history_object");
-      cacheHistory = JSON.parse(cacheHistory);
+      /* save text,type and res to database */
+      let his_obj = localStorage.getItem("cache_history_object");
+      his_obj = JSON.parse(his_obj);
 
-      /* check condition */
-      if (!cacheHistory) {
-        await defaultCache();
-      } else if (cacheHistory.some((item) =>item.text === textInput.value && item.type === typeInput.value)) {
-        await checkCacheResult();
-      } else {
-         await updateCache();
+      /* first time search */
+      if (his_obj == null) {
+
+        const resData = await goolgeMapSearch();
+        his_obj = [
+          {
+            text: textInput.value,
+            type: typeInput.value,
+            dataPlace: resData.dataPlace,
+            dataRestaturant: resData.restaurantData,
+            cDate: new Date(),
+          },
+        ];
+        let temp_his_string = JSON.stringify(his_obj);
+        localStorage.setItem("cache_history_object", temp_his_string);
+
+      } 
+      else if (his_obj.some((item) =>item.text === textInput.value && item.type === typeInput.value)) {
+        checkCacheResult()
+      } else 
+      {
+         updateCache()
       }
+
 
       clearCacheHistory();
       loadingStatus.value = false;
     }
 
-     /* use to call frist time to make localstorage*/ 
-     async function defaultCache(){
-        let cacheHistory = localStorage.getItem("cache_history_object");
-        cacheHistory = JSON.parse(cacheHistory);
-        const resData = await goolgeMapSearch();
-        cacheHistory = [{ text: textInput.value,type: typeInput.value,dataPlace: resData.dataPlace, dataRestaturant: resData.restaurantData,cDate: new Date(),}];
-        let temp_his_string = JSON.stringify(cacheHistory);
-        localStorage.setItem("cache_history_object", temp_his_string);
 
-     }
 
-     /*check cache data with text and type , if have history not call google api */
-     async function checkCacheResult(){
-        let cacheHistory = localStorage.getItem("cache_history_object"); 
-        cacheHistory = JSON.parse(cacheHistory);
-        const resultCache = cacheHistory.find((item) =>item.text === textInput.value && item.type === typeInput.value) || null;
 
-        if (resultCache) {
-          centerLocation.value.lat = resultCache.dataPlace.data.results[0].geometry.location.lat;
-          centerLocation.value.lng = resultCache.dataPlace.data.results[0].geometry.location.lng;
-          for (let i = 0; i < resultCache.dataRestaturant.length; i++) {
-            RestaurantList.value.push({
-              restaurant_name: resultCache.dataRestaturant[i].name,
-              lat: resultCache.dataRestaturant[i].geometry.location.lat,
-              lng: resultCache.dataRestaturant[i].geometry.location.lng,
-            });
-
-            markerRestaurant.value.push({
-              position: {
-                lat: resultCache.dataRestaturant[i].geometry.location.lat,
-                lng: resultCache.dataRestaturant[i].geometry.location.lng,
-              },
-            });
-          }
-        }
-
-     }
-    
-     /* update cache data  push new response to localstorage */
      async function updateCache(){
         const resData = await goolgeMapSearch();
-        let tempHistory = localStorage.getItem("cache_history_object");
+        /*get local storage */
+        let temp_his_string = localStorage.getItem("cache_history_object");
+        temp_his_string = JSON.parse(temp_his_string);
 
-        tempHistory = JSON.parse(tempHistory);
-
-        tempHistory.push({
+        temp_his_string.push({
           text: textInput.value,
           type: typeInput.value,
           dataPlace: resData.dataPlace,
@@ -222,40 +204,69 @@ export default {
           cDate: new Date(),
         });
 
-        tempHistory = JSON.stringify(tempHistory);
-        localStorage.setItem("cache_history_object", tempHistory);
+        temp_his_string = JSON.stringify(temp_his_string);
+        localStorage.setItem("cache_history_object", temp_his_string);
      }
 
+     async function checkCacheResult(){
 
-    /* clear cache  data  with time , can set  5 minus , 6 hours , 1 day */
-    async function clearCacheHistory() {
-          let cacheHistory = localStorage.getItem("cache_history_object");
-          cacheHistory = JSON.parse(cacheHistory);
+        let cacheHistory = localStorage.getItem("cache_history_object"); 
+        cacheHistory = JSON.parse(cacheHistory);
+        console.log(cacheHistory)
+        const resultCache = cacheHistory.find((item) =>item.text === textInput.value && item.type === typeInput.value) || null;
 
-          const currentDate = new Date();
-          //const timeToCheck = 1 * 60 * 1000; // 5 minus 
-          //const timeToCheck = 6 * 60 * 60 * 1000; // 6 hours
-          const timeToCheck = 24 * 60 * 60 * 1000; // 1 day 
+        if (resultCache) {
+          
+          console.log(cacheHistory.dataPlace)
+          centerLocation.value.lat = cacheHistory.dataPlace.data.results[0].geometry.location.lat;
+          centerLocation.value.lng = cacheHistory.dataPlace.data.results[0].geometry.location.lng;
 
-          cacheHistory = cacheHistory.filter((item) => {
-            const itemDate = new Date(item.cDate);
-            const timeDifference = currentDate - itemDate;
-            return timeDifference <= timeToCheck;
-          });
+          for (let i = 0; i < cacheHistory.dataRestaturant.length; i++) {
 
-          cacheHistory =  JSON.stringify(cacheHistory)
-          localStorage.setItem('cache_history_object',cacheHistory)
-    }
+            RestaurantList.value.push({
+              restaurant_name: cacheHistory.dataRestaturant[i].name,
+              lat: cacheHistory.dataRestaturant[i].geometry.location.lat,
+              lng: cacheHistory.dataRestaturant[i].geometry.location.lng,
+            });
+
+            markerRestaurant.value.push({
+              position: {
+                lat: cacheHistory.dataRestaturant[i].geometry.location.lat,
+                lng: cacheHistory.dataRestaturant[i].geometry.location.lng,
+              },
+            });
+          
+          }
+
+        }
+
+     }
+
+      async function clearCacheHistory() {
+        let his_obj = localStorage.getItem("cache_history_object");
+        his_obj = JSON.parse(his_obj);
+
+        const currentDate = new Date();
+        const timeToCheck = 5 * 60 * 1000;
+
+        his_obj = his_obj.filter((item) => {
+          const itemDate = new Date(item.cDate);
+          const timeDifference = currentDate - itemDate;
+          return timeDifference <= timeToCheck;
+        });
+
+        console.log(his_obj);
+      }
 
 
-    /* use to call google map service */
+
     async function goolgeMapSearch() {
+    
       const dataPlace = await apiGoogleMap.getMapBytext(textInput.value);
       centerLocation.value.lat =
         dataPlace.data.results[0].geometry.location.lat;
       centerLocation.value.lng =
         dataPlace.data.results[0].geometry.location.lng;
-
       /* find restaurant  with lat lng */
       let restaurantData = await apiGoogleMap.getLocationByLatLngAndType(
         centerLocation.value.lat,
@@ -263,7 +274,6 @@ export default {
         typeInput.value
       );
       restaurantData = restaurantData.data.results;
-
       /* change data format */
       for (let i = 0; i < restaurantData.length; i++) {
         RestaurantList.value.push({
@@ -278,13 +288,11 @@ export default {
           },
         });
       }
-
-      /* change logo */
+      /*change logo*/
       changeLogoMarker();
       return { restaurantData, dataPlace };
     }
-     
-    /* change logo marker */
+
     async function changeLogoMarker() {
       /*change marker icon*/
       if (typeInput.value == "restaurant") {
@@ -308,16 +316,12 @@ export default {
       }
     }
 
-
     onMounted(async () => {
       /* load default */
       await findLocation();
     });
 
-
-
     return {
-      defaultCache,
       updateCache,
       checkCacheResult,
       goolgeMapSearch,
